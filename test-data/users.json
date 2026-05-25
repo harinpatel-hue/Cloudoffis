@@ -1,0 +1,12 @@
+{
+  "validUser": {
+    "username": "qa-test-user",
+    "email": "test-user@cloudoffis.com.au",
+    "password": "CorrectPassword123"
+  },
+  "invalidUser": {
+    "username": "wrong-user",
+    "email": "wronguser@cloudoffis.com.au",
+    "password": "wrongpassword"
+  }
+}

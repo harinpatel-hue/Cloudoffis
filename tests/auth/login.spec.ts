@@ -1,4 +1,4 @@
-import { test, expect } from '../src/fixtures/baseFixture';
+import { test, expect } from '@fixtures/baseFixture';
 
 test.describe('Cloudoffis Login Page Tests @login', () => {
 

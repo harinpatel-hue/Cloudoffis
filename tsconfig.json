@@ -8,11 +8,13 @@
     "strict": true,
     "skipLibCheck": true,
     "paths": {
-      "@pages/*": ["./src/pages/*"],
-      "@fixtures/*": ["./src/fixtures/*"],
-      "@utils/*": ["./src/utils/*"],
-      "@types/*": ["./src/types/*"]
+      "@pages/*": ["./pages/*"],
+      "@fixtures/*": ["./fixtures/*"],
+      "@utils/*": ["./utils/*"],
+      "@types/*": ["./types/*"],
+      "@constants/*": ["./constants/*"],
+      "@test-data/*": ["./test-data/*"]
     }
   },
-  "include": ["src/**/*", "tests/**/*"]
+  "include": ["pages/**/*", "fixtures/**/*", "utils/**/*", "constants/**/*", "tests/**/*"]
 }

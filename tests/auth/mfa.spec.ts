@@ -1,5 +1,5 @@
-import { test, expect } from '../src/fixtures/baseFixture';
-import { STORAGE_STATE } from '../playwright.config';
+import { test, expect } from '@fixtures/baseFixture';
+import { STORAGE_STATE } from '../../playwright.config';
 import * as fs from 'fs';
 
 test.describe('Multi-Factor Authentication (2FA) & Trust Device Tests @mfa', () => {

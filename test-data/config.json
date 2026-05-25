@@ -1,0 +1,10 @@
+{
+  "timeout": {
+    "default": 30000,
+    "element": 5000
+  },
+  "environments": {
+    "qa": "https://qa-tax-workpaper.cloudoffis.com.au",
+    "workpapers": "https://qa-workpapers.cloudoffis.com.au"
+  }
+}
