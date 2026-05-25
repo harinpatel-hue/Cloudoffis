@@ -1,7 +1,7 @@
 import { Page, Locator } from '@playwright/test';
 import { BasePage } from './BasePage';
 
-export class RegisterPage extends BasePage {
+export class RegistrationPage extends BasePage {
   // Locators
   public readonly usernameInput: Locator;
   public readonly emailInput: Locator;

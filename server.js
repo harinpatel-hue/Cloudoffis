@@ -1,6 +1,7 @@
-import { Server } from "@modelcontextprotocol/sdk/server/index.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { chromium } from "playwright";
+const { Server } = require("@modelcontextprotocol/sdk/server/index.js");
+const { StdioServerTransport } = require("@modelcontextprotocol/sdk/server/stdio.js");
+const { ListToolsRequestSchema, CallToolRequestSchema } = require("@modelcontextprotocol/sdk/types.js");
+const { chromium } = require("playwright");
 
 const server = new Server(
   {
@@ -14,33 +15,59 @@ const server = new Server(
   }
 );
 
-server.setRequestHandler("tools/list", async () => ({
+server.setRequestHandler(ListToolsRequestSchema, async () => ({
   tools: [
     {
       name: "openPage",
-      description: "Open a URL"
+      description: "Open a URL in a headless/headed browser session",
+      inputSchema: {
+        type: "object",
+        properties: {
+          url: {
+            type: "string",
+            description: "The URL to navigate to"
+          }
+        },
+        required: ["url"]
+      }
     }
   ]
 }));
 
-server.setRequestHandler("tools/call", async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async (request) => {
   if (request.params.name === "openPage") {
+    const { url } = request.params.arguments;
     const browser = await chromium.launch({
       headless: false
     });
 
     const page = await browser.newPage();
 
-    await page.goto(request.params.arguments.url);
-
-    return {
-      content: [{
-        type: "text",
-        text: `Opened ${request.params.arguments.url}`
-      }]
-    };
+    try {
+      await page.goto(url);
+      return {
+        content: [{
+          type: "text",
+          text: `Opened ${url}`
+        }]
+      };
+    } catch (error) {
+      return {
+        isError: true,
+        content: [{
+          type: "text",
+          text: `Failed to open ${url}: ${error.message}`
+        }]
+      };
+    }
   }
+  
+  throw new Error(`Tool not found: ${request.params.name}`);
 });
 
 const transport = new StdioServerTransport();
-await server.connect(transport);
+server.connect(transport).then(() => {
+  console.error("MCP Playwright server successfully started and listening on stdio.");
+}).catch((error) => {
+  console.error("Failed to start MCP Playwright server:", error);
+});

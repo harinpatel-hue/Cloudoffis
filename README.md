@@ -13,32 +13,40 @@ Playwright_Framework
 │   └── workflows/
 │       └── playwright.yml            # CI/CD GitHub Actions workflow
 │
-├── tests/                            # Test specs grouped by module
-│   ├── auth/                         # Login, Xero SSO, and 2FA tests
-│   ├── registration/                 # Registration tests (placeholder)
-│   ├── dashboard/                    # Authenticated dashboard tests
-│   └── smoke/                        # Smoke test suites (placeholder)
+├── tests/                            # Test specs grouped by category
+│   ├── smoke/                        # Smoke test suites (login, registration)
+│   ├── regression/                   # Regression test suites (dashboard, mfa, xero-sso)
+│   └── api/                          # Backend API tests (userAPI)
 │
 ├── pages/                            # Page Object Models (POM)
 │   ├── BasePage.ts                   # Page interaction wrappers
 │   ├── LoginPage.ts                  # Login page selectors and actions
-│   ├── DashboardPage.ts              # Dashboard selectors and actions
-│   └── RegisterPage.ts               # Registration page template
+│   ├── RegistrationPage.ts           # Registration page POM
+│   └── DashboardPage.ts              # Dashboard selectors and actions
 │
 ├── fixtures/
 │   └── baseFixture.ts                # Custom injectable test fixtures
 │
+├── test-data/                        # Static test inputs & config parameters
+│   ├── users.json                    # User credentials data
+│   ├── credentials.json              # Client credentials configurations
+│   └── config.json                   # Framework settings config
+│
 ├── utils/                            # Generic helper utilities
 │   ├── logger.ts                     # Formatted logging wrapper
 │   ├── helper.ts                     # Dynamic data generation and timing
-│   └── apiHelper.ts                  # Playwright API requests wrapper
-│
-├── test-data/                        # Static test inputs & config parameters
-│   ├── users.json                    # User credentials data
-│   └── config.json                   # Framework settings config
+│   ├── apiHelper.ts                  # Playwright API requests wrapper
+│   └── randomGenerator.ts            # Alphanumeric data generation helpers
 │
 ├── constants/
-│   └── urls.ts                       # Application route mapping constants
+│   ├── urls.ts                       # Application route mapping constants
+│   ├── messages.ts                   # Validation & error messages
+│   └── selectors.ts                  # Centralized UI CSS/XPath selectors
+│
+├── ai/                               # LLM & AI helper support directories
+│   ├── promptTemplates/              # AI instruction prompts
+│   ├── generatedTests/               # Auto-generated specs folder
+│   └── locatorOptimizer.ts           # Smart locator selector fallback engine
 │
 ├── reports/                          # Local HTML reports output folder
 ├── screenshots/                      # Diagnostic failure screenshots output

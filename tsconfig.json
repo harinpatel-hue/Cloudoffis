@@ -13,8 +13,9 @@
       "@utils/*": ["./utils/*"],
       "@types/*": ["./types/*"],
       "@constants/*": ["./constants/*"],
-      "@test-data/*": ["./test-data/*"]
+      "@test-data/*": ["./test-data/*"],
+      "@ai/*": ["./ai/*"]
     }
   },
-  "include": ["pages/**/*", "fixtures/**/*", "utils/**/*", "constants/**/*", "tests/**/*"]
+  "include": ["pages/**/*", "fixtures/**/*", "utils/**/*", "constants/**/*", "tests/**/*", "ai/**/*"]
 }

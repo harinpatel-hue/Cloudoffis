@@ -51,7 +51,7 @@ export default defineConfig({
     // Global Authentication Setup project
     {
       name: 'setup',
-      testMatch: /auth\.setup\.ts/,
+      testMatch: /smoke\/auth\.setup\.ts/,
     },
     // Standard testing projects that run AFTER the setup project
     {
@@ -85,7 +85,7 @@ export default defineConfig({
     // these should NOT load the cached storage state, because they test logging in
     {
       name: 'login-flow',
-      testMatch: /login\.spec\.ts/,
+      testMatch: /smoke\/login\.spec\.ts/,
       use: {
         ...devices['Desktop Chrome'],
       },
