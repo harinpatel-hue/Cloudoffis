@@ -1,17 +1,19 @@
-import { Page, Locator } from '@playwright/test';
-
 export class LocatorOptimizer {
-  private page: Page;
-
-  constructor(page: Page) {
+  /**
+   * @param {import('@playwright/test').Page} page
+   */
+  constructor(page) {
     this.page = page;
   }
 
   /**
    * Attempts to locate an element with a primary selector,
    * and falls back to secondary selectors if the primary selector fails.
+   * @param {string} primarySelector
+   * @param {string[]} fallbacks
+   * @returns {Promise<import('@playwright/test').Locator>}
    */
-  async findOptimalElement(primarySelector: string, fallbacks: string[]): Promise<Locator> {
+  async findOptimalElement(primarySelector, fallbacks) {
     const primaryLocator = this.page.locator(primarySelector);
     try {
       // Check if visible or attached quickly

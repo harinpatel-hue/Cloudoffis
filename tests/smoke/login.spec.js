@@ -1,4 +1,4 @@
-import { test, expect } from '@fixtures/baseFixture';
+import { test, expect } from '@fixtures/baseFixture.js';
 
 test.describe('Cloudoffis Login Page Tests @login', () => {
 
@@ -88,7 +88,7 @@ test.describe('Cloudoffis Login Page Tests @login', () => {
       test.skip(true, 'Skipping TC037: Active credentials not configured in .env file.');
     }
 
-    await loginPage.login(username!, password!);
+    await loginPage.login(username, password);
     
     // Should navigate to dashboard
     await dashboardPage.verifyOnDashboard();

@@ -1,5 +1,5 @@
-import { test, expect } from '@fixtures/baseFixture';
-import { STORAGE_STATE } from '../../playwright.config';
+import { test, expect } from '@fixtures/baseFixture.js';
+import { STORAGE_STATE } from '../../playwright.config.js';
 import * as fs from 'fs';
 
 test.describe('Multi-Factor Authentication (2FA) & Trust Device Tests @mfa', () => {
@@ -15,7 +15,7 @@ test.describe('Multi-Factor Authentication (2FA) & Trust Device Tests @mfa', () 
 
     // Attempt login to reach the 2FA page
     await loginPage.goto();
-    await loginPage.login(username!, password!);
+    await loginPage.login(username, password);
 
     // Wait for the URL to change to the 2FA authentication route
     try {

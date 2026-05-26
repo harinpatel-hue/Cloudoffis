@@ -1,5 +1,5 @@
-import { test, expect } from '@fixtures/baseFixture';
-import { RandomGenerator } from '@utils/randomGenerator';
+import { test, expect } from '@fixtures/baseFixture.js';
+import { RandomGenerator } from '@utils/randomGenerator.js';
 
 test.describe('Registration Screen Smoke Tests @registration', () => {
 

@@ -1,5 +1,5 @@
-import { test as setup } from '@fixtures/baseFixture';
-import { STORAGE_STATE } from '../../playwright.config';
+import { test as setup } from '@fixtures/baseFixture.js';
+import { STORAGE_STATE } from '../../playwright.config.js';
 
 setup('authenticate', async ({ loginPage, page }) => {
   const username = process.env.TEST_USERNAME;

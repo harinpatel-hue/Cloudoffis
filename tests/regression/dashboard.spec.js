@@ -1,5 +1,5 @@
-import { test, expect } from '@fixtures/baseFixture';
-import { STORAGE_STATE } from '../../playwright.config';
+import { test, expect } from '@fixtures/baseFixture.js';
+import { STORAGE_STATE } from '../../playwright.config.js';
 import * as fs from 'fs';
 
 test.describe('Cloudoffis Dashboard Tests @dashboard', () => {

@@ -1,17 +1,10 @@
 import { test as base } from '@playwright/test';
-import { LoginPage } from '@pages/LoginPage';
-import { DashboardPage } from '@pages/DashboardPage';
-import { RegistrationPage } from '@pages/RegistrationPage';
-
-// Declare the types for custom fixtures
-export type CustomFixtures = {
-  loginPage: LoginPage;
-  dashboardPage: DashboardPage;
-  registrationPage: RegistrationPage;
-};
+import { LoginPage } from '@pages/LoginPage.js';
+import { DashboardPage } from '@pages/DashboardPage.js';
+import { RegistrationPage } from '@pages/RegistrationPage.js';
 
 // Extend base test to include custom page fixtures
-export const test = base.extend<CustomFixtures>({
+export const test = base.extend({
   loginPage: async ({ page }, use) => {
     const loginPage = new LoginPage(page);
     await use(loginPage);

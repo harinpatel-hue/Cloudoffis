@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { APIHelper } from '@utils/apiHelper';
+import { APIHelper } from '@utils/apiHelper.js';
 
 test.describe('User API Verification Tests @api', () => {
-  let apiHelper: APIHelper;
+  let apiHelper;
 
   test.beforeAll(async ({ playwright }) => {
     // Create request context
