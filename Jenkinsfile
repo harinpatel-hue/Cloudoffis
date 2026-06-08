@@ -19,6 +19,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
+                bat 'if exist D:\\Automation\\Playwright_JS-master\\.env copy D:\\Automation\\Playwright_JS-master\\.env .env'
             }
         }
 
