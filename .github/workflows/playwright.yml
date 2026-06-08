@@ -41,6 +41,27 @@ jobs:
       run: npm ci
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
+    - name: Verify Secrets Configuration
+      env:
+        NORMAL_USERNAME: ${{ secrets.NORMAL_USERNAME }}
+        NORMAL_PASSWORD: ${{ secrets.NORMAL_PASSWORD }}
+        NORMAL_TOTP_SECRET: ${{ secrets.NORMAL_TOTP_SECRET }}
+      run: |
+        if [ -z "$NORMAL_USERNAME" ]; then
+          echo "::error::NORMAL_USERNAME secret is NOT configured in GitHub Repository Settings."
+        else
+          echo "NORMAL_USERNAME is configured."
+        fi
+        if [ -z "$NORMAL_PASSWORD" ]; then
+          echo "::error::NORMAL_PASSWORD secret is NOT configured in GitHub Repository Settings."
+        else
+          echo "NORMAL_PASSWORD is configured."
+        fi
+        if [ -z "$NORMAL_TOTP_SECRET" ]; then
+          echo "::error::NORMAL_TOTP_SECRET secret is NOT configured in GitHub Repository Settings."
+        else
+          echo "NORMAL_TOTP_SECRET is configured."
+        fi
     - name: Run Playwright tests
       env:
         NORMAL_USERNAME: ${{ secrets.NORMAL_USERNAME }}
