@@ -3,7 +3,7 @@ const { devices } = require('@playwright/test');
 
 // Read environment variables from .env file
 require('dotenv').config();
-const { getBaseUrl } = require('./config/env-config');
+const { getBaseUrl } = require('./src/config/env-config');
 const baseUrl = getBaseUrl();
 
 console.log('Running tests against base URL: ' + baseUrl);

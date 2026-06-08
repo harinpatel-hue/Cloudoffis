@@ -1,7 +1,7 @@
 const { test, expect } = require('@playwright/test');
-const { ApiUtils } = require('../../utils/api-utils');
-const { apiRoutes } = require('../../config/api-routes');
-const userPayload = require('../../test-data/api-payloads/user-payload.json');
+const { ApiUtils } = require('../../src/utils/api-utils');
+const { apiRoutes } = require('../../src/config/api-routes');
+const userPayload = require('../../src/test-data/api-payloads/user-payload.json');
 
 test.describe('User API Tests @api', () => {
   let apiUtils;
