@@ -15,7 +15,8 @@
     "allure:generate": "allure generate allure-results --clean",
     "allure:serve": "allure serve allure-results",
     "allure:open": "allure open allure-report",
-    "show-report": "playwright show-report"
+    "show-report": "playwright show-report",
+    "jenkins:trigger": "node utils/trigger-jenkins.js"
   },
   "keywords": [],
   "author": "Rajat Verma",
