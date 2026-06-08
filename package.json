@@ -1,0 +1,30 @@
+{
+  "name": "01_rs_playwright_js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:regression": "playwright test --grep @regression",
+    "test:ui": "playwright test --grep @ui",
+    "test:ui:headed": "playwright test --grep @ui --headed",
+    "test:api": "playwright test --grep @api",
+    "allure:generate": "allure generate allure-results --clean",
+    "allure:serve": "allure serve allure-results",
+    "allure:open": "allure open allure-report",
+    "show-report": "playwright show-report"
+  },
+  "keywords": [],
+  "author": "Rajat Verma",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.60.0",
+    "allure-commandline": "^2.42.0",
+    "allure-playwright": "^2.0.0-beta.16",
+    "dotenv": "^17.4.2",
+    "otplib": "^13.4.1"
+  }
+}
