@@ -44,6 +44,7 @@ const config = {
     reporter: [
         ['list'],
         ['html', { open: 'never' }],
+        ['json', { outputFile: 'test-results/results.json' }],
         ['allure-playwright', { detail: true, outputFolder: 'allure-results' }]
     ],
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
