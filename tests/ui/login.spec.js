@@ -18,14 +18,10 @@ test.describe('Authentication Tests @ui', () => {
     // Fill credentials and click sign in
     await loginPage.fillLoginCredentials(email, password);
     
-    // Generate and enter MFA code if it appears
-    try {
-      await loginPage.mfaCodeInput.waitFor({ state: 'visible', timeout: 5000 });
-      const code = generateTotp(secret);
-      await loginPage.enterMfaCode(code);
-    } catch (e) {
-      console.log('MFA input field did not appear, proceeding.');
-    }
+    // Generate and enter MFA code (wait up to 15s for CI runners)
+    await loginPage.mfaCodeInput.waitFor({ state: 'visible', timeout: 15000 });
+    const code = generateTotp(secret);
+    await loginPage.enterMfaCode(code);
     
     // Assert redirect away from login page
     await expect(page).not.toHaveURL(/auth\/login/);

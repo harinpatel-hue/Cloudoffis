@@ -7,7 +7,7 @@ class LoginPage {
     this.passwordInput = page.locator('input#password');
     this.loginButton = page.locator('#sign-in-btn');
     
-    this.mfaCodeInput = page.locator('input[name="code"]');
+    this.mfaCodeInput = page.locator('#otpCode');
     this.mfaVerifyButton = page.locator('button:has-text("Verify"), button:has-text("Submit")');
     
     this.xeroLoginButton = page.locator('button:has-text("Xero"), a:has-text("Xero")');
