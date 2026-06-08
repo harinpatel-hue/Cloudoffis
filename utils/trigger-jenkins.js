@@ -5,7 +5,7 @@ const JENKINS_URL = 'http://localhost:8080';
 const JOB_NAME = 'cloudoffis-playwright-tests';
 const USERNAME = 'harinpatel';
 // Generate this token from Jenkins: click your username -> Configure -> API Token -> Add new Token
-const API_TOKEN = process.env.JENKINS_API_TOKEN || 'Harin123@'; // Can fall back to password or a generated API token
+const API_TOKEN = process.env.JENKINS_API_TOKEN || '1188deedd591d8c256889adf50cb302c91'; // Can fall back to password or a generated API token
 
 const env = process.argv[2] || 'qa';
 const testType = process.argv[3] || 'smoke';
