@@ -87,13 +87,41 @@ const config = {
 
     },
 
-    /* Configure projects for major browsers */
+    /* Configure projects for major browsers and test suites */
     projects: [
         {
-            name: 'firefox',
+            name: 'all-tests',
             use: {
                 ...devices['Desktop Firefox'],
             },
+        },
+        {
+            name: 'smoke-suite',
+            use: {
+                ...devices['Desktop Firefox'],
+            },
+            grep: /@smoke/,
+        },
+        {
+            name: 'regression-suite',
+            use: {
+                ...devices['Desktop Firefox'],
+            },
+            grep: /@regression/,
+        },
+        {
+            name: 'ui-suite',
+            use: {
+                ...devices['Desktop Firefox'],
+            },
+            grep: /@ui/,
+        },
+        {
+            name: 'api-suite',
+            use: {
+                ...devices['Desktop Firefox'],
+            },
+            grep: /@api/,
         },
     ],
 
