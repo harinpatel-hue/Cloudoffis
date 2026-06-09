@@ -1,8 +1,7 @@
 {
-  "name": "01_rs_playwright_js",
+  "name": "cloudoffis-playwright-automation",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Cloudoffis Automated QA Testing Framework",
   "scripts": {
     "test": "playwright test --project=all-tests",
     "test:headed": "playwright test --project=all-tests --headed",
@@ -19,8 +18,7 @@
     "jenkins:trigger": "node src/utils/trigger-jenkins.js",
     "jira:report": "node src/utils/report-to-jira.js"
   },
-  "keywords": [],
-  "author": "Rajat Verma",
+  "author": "Cloudoffis QA Team",
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.60.0",

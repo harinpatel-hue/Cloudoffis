@@ -1,5 +1,8 @@
 // @ts-check
 const { devices } = require('@playwright/test');
+const fs = require('fs');
+const path = require('path');
+const packageJson = require('./package.json');
 
 // Read environment variables from .env file
 require('dotenv').config();
@@ -8,12 +11,28 @@ const baseUrl = getBaseUrl();
 
 console.log('Running tests against base URL: ' + baseUrl);
 
+// Write environment details for Allure Report
+try {
+    const allureResultsDir = path.join(__dirname, 'allure-results');
+    if (!fs.existsSync(allureResultsDir)) {
+        fs.mkdirSync(allureResultsDir, { recursive: true });
+    }
+    const envProps = `Framework-Version=${packageJson.version}\nEnvironment=${process.env.ENV || 'qa'}\nBrowser=Firefox\n`;
+    fs.writeFileSync(path.join(allureResultsDir, 'environment.properties'), envProps);
+} catch (e) {
+    console.warn('Could not write Allure environment properties:', e.message);
+}
+
 
 /**
  * @see https://playwright.dev/docs/test-configuration
  * @type {import('@playwright/test').PlaywrightTestConfig}
  */
 const config = {
+    metadata: {
+        'Framework Version': packageJson.version,
+        'Environment': process.env.ENV || 'qa',
+    },
 
     /* This is the location where all test cases are present. */
     testDir: './tests',

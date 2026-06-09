@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
-const { LoginPage } = require('../../src/page-objects/login-page');
-const { generateTotp } = require('../../src/utils/mfa-utils');
+const { LoginPage } = require('../../../src/page-objects/login-page');
+const { generateTotp } = require('../../../src/utils/mfa-utils');
 
 test.describe('Authentication Tests @ui', () => {
   let loginPage;
