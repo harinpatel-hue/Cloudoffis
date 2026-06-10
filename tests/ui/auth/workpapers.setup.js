@@ -5,6 +5,33 @@ const { generateTotp } = require('../../../src/utils/mfa-utils');
 const authFile = 'playwright/.auth/workpapers.json';
 
 setup('authenticate workpapers', async ({ page }) => {
+  const fs = require('fs');
+  const path = require('path');
+
+  // Check if saved session already exists and is valid
+  if (fs.existsSync(authFile)) {
+    try {
+      const authData = JSON.parse(fs.readFileSync(authFile, 'utf-8'));
+      const originData = authData.origins?.find(o => o.origin.includes('qa-workpapers'));
+      if (originData) {
+        const accessTokenObj = originData.localStorage?.find(item => item.name === 'ACCESS_TOKEN');
+        if (accessTokenObj?.value) {
+          const payloadBase64 = accessTokenObj.value.split('.')[1];
+          const payload = JSON.parse(Buffer.from(payloadBase64, 'base64').toString('utf-8'));
+          const exp = payload.exp * 1000;
+          
+          // If token is valid for at least 5 more minutes, skip login
+          if (exp - Date.now() > 5 * 60 * 1000) {
+            console.log('Reusing existing valid session. Skipping login.');
+            return;
+          }
+        }
+      }
+    } catch (e) {
+      console.log('Could not parse existing session, performing full login...');
+    }
+  }
+
   const loginPage = new LoginPage(page);
   await loginPage.navigate();
   
@@ -19,8 +46,8 @@ setup('authenticate workpapers', async ({ page }) => {
   const code = generateTotp(secret);
   await loginPage.enterMfaCode(code);
 
-  // Assert redirect away from login page
-  await expect(page).not.toHaveURL(/auth\/login/, { timeout: 15000 });
+  // Wait for redirect to client list page to ensure login is complete and session is saved
+  await page.waitForURL(/client-list/, { timeout: 30000 });
 
   // Save storage state (cookies, local storage) to authFile
   await page.context().storageState({ path: authFile });

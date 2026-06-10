@@ -1,12 +1,19 @@
 const { test, expect } = require('@playwright/test');
+const { ClientsPage } = require('../../../src/page-objects/clients');
 
 test.describe('Client List UI Tests @ui @regression', () => {
 
-  test.skip('Search client by name @TC-701', async ({ page }) => {
-    // Placeholder for searching client list
+  let clientsPage;
+
+  test.beforeEach(async ({ page }) => {
+    clientsPage = new ClientsPage(page);
+    await clientsPage.navigate();
   });
 
-  test.skip('Filter clients by status @TC-702', async ({ page }) => {
-    // Placeholder for filtering client list
+  test('Search client by name @TC-701 @regression', async ({ page }) => {
+    // Search for a client by name
+    await clientsPage.searchClient('Alica');
+    await page.waitForTimeout(3000);
+    await clientsPage.verifyClientIsVisible('Alica');
   });
 });

@@ -10,6 +10,8 @@
     "test:regression": "playwright test --project=regression-suite",
     "test:ui": "playwright test --project=ui-suite",
     "test:ui:headed": "playwright test --project=ui-suite --headed",
+    "test:regression:headed": "playwright test --project=regression-suite --headed",
+    "test:smoke:headed": "playwright test --project=smoke-suite --headed",
     "test:api": "playwright test --project=api-suite",
     "allure:generate": "allure generate allure-results --clean",
     "allure:serve": "allure serve allure-results",

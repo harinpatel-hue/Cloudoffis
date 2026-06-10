@@ -21,14 +21,18 @@ test.describe('Authentication Tests @ui', () => {
     // Fill credentials and click sign in
     await loginPage.fillLoginCredentials(email, password);
 
-    // Generate and enter MFA code (wait up to 15s for CI runners)
+    // Generate and enter MFA code — enterMfaCode fills the code AND clicks Verify
     await loginPage.mfaCodeInput.waitFor({ state: 'visible', timeout: 15000 });
     const code = generateTotp(secret);
     await loginPage.enterMfaCode(code);
 
-    // Assert redirect away from login page
-    await expect(page).not.toHaveURL(/auth\/login/);
+    // Wait for redirect and verify the client list page is loaded
+    await page.waitForURL(/client-list/, { timeout: 30000 });
+    await expect(page).toHaveURL(/client-list/);
+
+    console.log('Callback URL: ', page.url());
   });
+
 
   test('Xero Authentication Redirect @regression', async ({ page }) => {
     await loginPage.clickXeroLogin();
@@ -36,6 +40,45 @@ test.describe('Authentication Tests @ui', () => {
     // Expect redirected to Xero authentication portal
     await expect(page).toHaveURL(/xero\.com/);
   });
+
+  test('Xero Authentication Login @regression', async ({ page }) => {
+    await loginPage.clickXeroLogin();
+
+    // Wait for redirect to Xero login page
+    await expect(page).toHaveURL(/xero\.com/, { timeout: 15000 });
+
+    const xeroEmail = process.env.XERO_EMAIL;
+    const xeroPassword = process.env.XERO_PASSWORD;
+    const xeroSecret = process.env.XERO_TOTP_SECRET;
+
+    // Fill Xero credentials — this triggers a navigation
+    await loginPage.fillXeroCredentials(xeroEmail, xeroPassword);
+
+    // Wait for Xero to navigate after login (to either MFA screen or consent screen)
+    await page.waitForURL(/xero\.com/, { timeout: 30000 });
+
+    // Handle MFA only if the MFA input appears (Xero may skip it for active sessions)
+    const mfaInput = page.getByRole('textbox', { name: 'Authentication code' });
+    if (await mfaInput.isVisible().catch(() => false)) {
+      const mfaCode = generateTotp(xeroSecret);
+      await loginPage.fillXeroMfa(mfaCode);
+
+      // After MFA submission, wait for navigation to the consent screen
+      await page.waitForURL(/authorize\.xero\.com/, { timeout: 30000 });
+    }
+
+    // Click Allow Access on the consent screen
+    await loginPage.allowAccess();
+
+    // Wait for redirect back to the app and verify client list page is loaded
+    await page.waitForURL(/client-list/, { timeout: 30000 });
+    await expect(page).toHaveURL(/client-list/);
+
+    console.log('Callback URL: ', page.url());
+  });
+
+
+
 
   test('Login with Invalid Credentials @regression', async ({ page }) => {
     // Fill wrong credentials and click sign in
