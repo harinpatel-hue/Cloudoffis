@@ -20,7 +20,7 @@ try {
     const envProps = `Framework-Version=${packageJson.version}\nEnvironment=${process.env.ENV || 'qa'}\nBrowser=Firefox\n`;
     fs.writeFileSync(path.join(allureResultsDir, 'environment.properties'), envProps);
 } catch (e) {
-    console.warn('Could not write Allure environment properties:', e.message);
+    console.warn('Could not write Allure environment properties:', e instanceof Error ? e.message : String(e));
 }
 
 
@@ -93,15 +93,10 @@ const config = {
         //headless:false // Headed
 
         /* This is for the screenshots (will be attached in the Reports) */
-        //screenshot: 'on', // For every step
-        // screenshot: 'off',
-        screenshot: 'only-on-failure',
+        screenshot: 'on',
 
         /* This is for recording the videos */
-        //video:'off', // Do not record video.
-        //video:'on', //Record video for each test.
-        //video:'on-first-retry', // Record video only when retrying a test for the first time.
-        video: 'retain-on-failure', //Record video for each test, but remove all videos from successful test runs.
+        video: 'on',
         //video:'retry-with-video',
 
     },
@@ -109,37 +104,54 @@ const config = {
     /* Configure projects for major browsers and test suites */
     projects: [
         {
-            name: 'all-tests',
+            name: 'setup',
+            testMatch: /workpapers\.setup\.js/,
             use: {
                 ...devices['Desktop Firefox'],
             },
         },
         {
+            name: 'all-tests',
+            use: {
+                ...devices['Desktop Firefox'],
+                storageState: 'playwright/.auth/workpapers.json',
+            },
+            dependencies: ['setup'],
+        },
+        {
             name: 'smoke-suite',
             use: {
                 ...devices['Desktop Firefox'],
+                storageState: 'playwright/.auth/workpapers.json',
             },
+            dependencies: ['setup'],
             grep: /@smoke/,
         },
         {
             name: 'regression-suite',
             use: {
                 ...devices['Desktop Firefox'],
+                storageState: 'playwright/.auth/workpapers.json',
             },
+            dependencies: ['setup'],
             grep: /@regression/,
         },
         {
             name: 'ui-suite',
             use: {
                 ...devices['Desktop Firefox'],
+                storageState: 'playwright/.auth/workpapers.json',
             },
+            dependencies: ['setup'],
             grep: /@ui/,
         },
         {
             name: 'api-suite',
             use: {
                 ...devices['Desktop Firefox'],
+                storageState: 'playwright/.auth/workpapers.json',
             },
+            dependencies: ['setup'],
             grep: /@api/,
         },
     ],

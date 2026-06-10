@@ -1,16 +1,11 @@
 .vscode
 .DS_Store
 node_modules
-REFERENCE_Learning
+playwright-docs
 playwright-report
 test-results
 allure-results
-
-
-# cypress/reports/mochawesome-report/
-# cypress/screenshots/
-# browserstack.json
-
+playwright/.auth
 
 #~/.jenkins
 #.jenkins

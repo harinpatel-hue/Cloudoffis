@@ -3,6 +3,9 @@ const { LoginPage } = require('../../../src/page-objects/login-page');
 const { generateTotp } = require('../../../src/utils/mfa-utils');
 
 test.describe('Authentication Tests @ui', () => {
+  // Clear storageState so that login tests execute starting from a clean unauthenticated context
+  test.use({ storageState: { cookies: [], origins: [] } });
+
   let loginPage;
 
   test.beforeEach(async ({ page }) => {
