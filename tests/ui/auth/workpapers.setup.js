@@ -1,18 +1,22 @@
 const { test: setup, expect } = require('@playwright/test');
 const { LoginPage } = require('../../../src/page-objects/login-page');
 const { generateTotp } = require('../../../src/utils/mfa-utils');
+const { getBaseUrl } = require('../../../src/config/env-config');
 
-const authFile = 'playwright/.auth/workpapers.json';
+const env = process.env.ENV || 'qa';
+const authFile = `playwright/.auth/workpapers-${env}.json`;
 
 setup('authenticate workpapers', async ({ page }) => {
   const fs = require('fs');
   const path = require('path');
+  const baseUrl = getBaseUrl();
+  const currentHostname = new URL(baseUrl).hostname;
 
   // Check if saved session already exists and is valid
   if (fs.existsSync(authFile)) {
     try {
       const authData = JSON.parse(fs.readFileSync(authFile, 'utf-8'));
-      const originData = authData.origins?.find(o => o.origin.includes('qa-workpapers'));
+      const originData = authData.origins?.find(o => o.origin.includes(currentHostname));
       if (originData) {
         const accessTokenObj = originData.localStorage?.find(item => item.name === 'ACCESS_TOKEN');
         if (accessTokenObj?.value) {

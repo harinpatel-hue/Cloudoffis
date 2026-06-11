@@ -8,6 +8,8 @@ const packageJson = require('./package.json');
 require('dotenv').config();
 const { getBaseUrl } = require('./src/config/env-config');
 const baseUrl = getBaseUrl();
+const env = process.env.ENV || 'qa';
+const authFile = `playwright/.auth/workpapers-${env}.json`;
 
 console.log('Running tests against base URL: ' + baseUrl);
 
@@ -114,7 +116,7 @@ const config = {
             name: 'all-tests',
             use: {
                 ...devices['Desktop Firefox'],
-                storageState: 'playwright/.auth/workpapers.json',
+                storageState: authFile,
             },
             dependencies: ['setup'],
         },
@@ -122,7 +124,7 @@ const config = {
             name: 'smoke-suite',
             use: {
                 ...devices['Desktop Firefox'],
-                storageState: 'playwright/.auth/workpapers.json',
+                storageState: authFile,
             },
             dependencies: ['setup'],
             grep: /@smoke/,
@@ -131,7 +133,7 @@ const config = {
             name: 'regression-suite',
             use: {
                 ...devices['Desktop Firefox'],
-                storageState: 'playwright/.auth/workpapers.json',
+                storageState: authFile,
             },
             dependencies: ['setup'],
             grep: /@regression/,
@@ -140,7 +142,7 @@ const config = {
             name: 'ui-suite',
             use: {
                 ...devices['Desktop Firefox'],
-                storageState: 'playwright/.auth/workpapers.json',
+                storageState: authFile,
             },
             dependencies: ['setup'],
             grep: /@ui/,
@@ -149,7 +151,7 @@ const config = {
             name: 'api-suite',
             use: {
                 ...devices['Desktop Firefox'],
-                storageState: 'playwright/.auth/workpapers.json',
+                storageState: authFile,
             },
             dependencies: ['setup'],
             grep: /@api/,

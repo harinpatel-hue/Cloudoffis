@@ -10,6 +10,10 @@ const apiRoutes = {
   workpapers: {
     list: '/api/v1/workpapers',
     create: '/api/v1/workpapers/create'
+  },
+  clients: {
+    list: '/api/v1/clients',
+    create: '/api/v1/clients/create',
   }
 };
 
