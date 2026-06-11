@@ -21,6 +21,13 @@ class ClientsPage {
     async verifyClientIsVisible(name) {
         await expect(this.clientTableRows.filter({ hasText: name }).first()).toBeVisible();
     }
+
+    async verifyVisualLayout(screenshotName) {
+        await expect(this.page).toHaveScreenshot(screenshotName, {
+            maxDiffPixelRatio: 0.05,
+            animations: 'allow'
+        });
+    }
 }
 
 module.exports = { ClientsPage };

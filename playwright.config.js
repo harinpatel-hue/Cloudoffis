@@ -156,6 +156,15 @@ const config = {
             dependencies: ['setup'],
             grep: /@api/,
         },
+        {
+            name: 'e2e-suite',
+            use: {
+                ...devices['Desktop Firefox'],
+                storageState: authFile,
+            },
+            dependencies: ['setup'],
+            grep: /@e2e/,
+        },
     ],
 
     /* Folder for test artifacts such as screenshots, videos, traces, etc. */
