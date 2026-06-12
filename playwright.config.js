@@ -39,6 +39,7 @@ const config = {
     /* This is the location where all test cases are present. */
     testDir: './tests',
 
+
     /* Maximum time one test can run for. */
     timeout: 60 * 1000,
     expect: {
@@ -66,7 +67,8 @@ const config = {
         ['list'],
         ['html', { open: 'never' }],
         ['json', { outputFile: 'test-results/results.json' }],
-        ['allure-playwright', { detail: true, outputFolder: 'allure-results' }]
+        ['allure-playwright', { detail: true, outputFolder: 'allure-results' }],
+        ['./src/utils/notifier.js']
     ],
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     use: {
@@ -79,7 +81,7 @@ const config = {
         // permissions:['geolocation'],
 
         /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
-        actionTimeout: 0,
+        actionTimeout: 15000,
         /* Base URL to use in actions like `await page.goto('/')`. */
         baseURL: baseUrl,
 
@@ -107,7 +109,7 @@ const config = {
     projects: [
         {
             name: 'setup',
-            testMatch: /workpapers\.setup\.js/,
+            testMatch: /auth\.setup\.js/,
             use: {
                 ...devices['Desktop Firefox'],
             },

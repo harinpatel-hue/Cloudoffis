@@ -16,20 +16,21 @@
     "test:e2e": "playwright test --project=e2e-suite",
     "test:e2e:headed": "playwright test --project=e2e-suite --headed",
     "allure:generate": "node src/utils/generate-allure.js",
-    "notify:slack": "node src/utils/notifier.js",
+    "notify:chat": "node src/utils/notifier.js",
     "allure:serve": "allure serve allure-results",
     "allure:open": "allure open allure-report",
     "show-report": "playwright show-report",
     "jenkins:trigger": "node src/utils/trigger-jenkins.js",
     "jira:report": "node src/utils/report-to-jira.js",
-    "clean": "node -e \"['test-results', 'playwright-report', 'allure-results', 'allure-report'].forEach(dir => require('fs').rmSync(dir, { recursive: true, force: true }))\""
+    "clean": "node -e \"['test-results', 'playwright-report', 'allure-results', 'allure-report'].forEach(dir => require('fs').rmSync(dir, { recursive: true, force: true }))\"",
+    "clean:allure": "node -e \"['allure-results', 'allure-report'].forEach(dir => require('fs').rmSync(dir, { recursive: true, force: true }))\""
   },
   "author": "Cloudoffis QA Team",
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.60.0",
     "allure-commandline": "^2.42.0",
-    "allure-playwright": "^2.0.0-beta.16",
+    "allure-playwright": "^3.10.0",
     "dotenv": "^17.4.2",
     "marked": "^18.0.5",
     "otplib": "^13.4.1"

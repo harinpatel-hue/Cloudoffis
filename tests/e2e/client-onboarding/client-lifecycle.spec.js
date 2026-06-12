@@ -21,7 +21,7 @@ test.describe('End-to-End Client Lifecycle Workflow @e2e @regression', () => {
     // await page.getByRole('button', { name: 'Add Client' }).click();
     // await page.getByLabel('Client Name').fill('Acme Corp');
     // await page.getByRole('button', { name: 'Save' }).click();
-    
+
     // Step 3: Search and verify the newly created client
     console.log('Step 3: Verifying client is searchable in table...');
     await clientsPage.searchClient('Alica'); // Using existing QA client name
@@ -41,7 +41,7 @@ test.describe('End-to-End Client Lifecycle Workflow @e2e @regression', () => {
     // Step 6: Create Workpaper and confirm successful setup
     console.log('Step 6: Creating workpaper and validating status...');
     // TODO: Navigate to Workpapers page and click Create
-    
+
     console.log('E2E Client Lifecycle run completed successfully!');
   });
 });
