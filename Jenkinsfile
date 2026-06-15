@@ -72,12 +72,6 @@ pipeline {
                     echo "Could not compile Allure report in Jenkins: ${e.message}"
                 }
                 
-                try {
-                    echo 'Reporting test failures to JIRA...'
-                    bat 'npm run jira:report'
-                } catch (Exception e) {
-                    echo "Could not report failures to JIRA: ${e.message}"
-                }
             }
         }
     }

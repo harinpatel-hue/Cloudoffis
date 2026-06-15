@@ -1,11 +1,15 @@
 const http = require('http');
 
 // Configs for Jenkins
-const JENKINS_URL = 'http://localhost:8080';
-const JOB_NAME = 'cloudoffis-playwright-tests';
-const USERNAME = 'harinpatel';
-// Generate this token from Jenkins: click your username -> Configure -> API Token -> Add new Token
-const API_TOKEN = process.env.JENKINS_API_TOKEN || '1188deedd591d8c256889adf50cb302c91'; // Can fall back to password or a generated API token
+const JENKINS_URL = process.env.JENKINS_URL || 'http://localhost:8080';
+const JOB_NAME = process.env.JENKINS_JOB_NAME || 'cloudoffis-playwright-tests';
+const USERNAME = process.env.JENKINS_USERNAME;
+const API_TOKEN = process.env.JENKINS_API_TOKEN;
+
+if (!USERNAME || !API_TOKEN) {
+  console.error('JENKINS_USERNAME and JENKINS_API_TOKEN must be configured in environment variables.');
+  process.exit(1);
+}
 
 const env = process.argv[2] || 'qa';
 const testType = process.argv[3] || 'smoke';

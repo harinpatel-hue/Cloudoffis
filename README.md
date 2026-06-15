@@ -1,6 +1,6 @@
 # Cloudoffis Playwright Test Automation Framework
 
-A modern, robust, and clean boilerplate for Web and API automation testing using Playwright, JavaScript, Allure Reporting, and automated JIRA integration.
+A modern, robust, and clean boilerplate for Web and API automation testing using Playwright, JavaScript, and Allure Reporting.
 
 ---
 
@@ -11,7 +11,6 @@ A modern, robust, and clean boilerplate for Web and API automation testing using
 * **Automated MFA (TOTP)**: Real-time calculation of 6-digit Multi-Factor Authentication codes via the `otplib` algorithm for fully unattended login automation.
 * **Project-Based Test Suites**: Structured execution scopes (`all-tests`, `smoke-suite`, `regression-suite`, `ui-suite`, `api-suite`) configured inside `playwright.config.js`.
 * **CI/CD Integration**: Out-of-the-box support with pre-configured GitHub Actions (`.github/workflows/playwright.yml`) and local Jenkins (`Jenkinsfile`).
-* **Automated JIRA Bug Tracking**: On test failures, the framework automatically queries JIRA Cloud, creates a detailed Bug ticket with stack traces, or appends recurrence logs to existing tickets.
 * **Aesthetic Versioned Reports**: Generates Playwright HTML reports and advanced Allure dashboards automatically injected with active environment and framework version metadata.
 
 ---
@@ -30,6 +29,7 @@ A modern, robust, and clean boilerplate for Web and API automation testing using
 │   │   ├── env-config.js        # Environment URLs and dynamic credentials
 │   │   └── api-routes.js        # Centralized API endpoints routes
 │   ├── page-objects/
+│   │   ├── import-clients-page.js # Import Clients screen actions and assertions
 │   │   └── login-page.js        # POM page for credentials & MFA handling
 │   ├── test-data/
 │   │   └── api-payloads/        # Mock payloads for API requests
@@ -38,8 +38,6 @@ A modern, robust, and clean boilerplate for Web and API automation testing using
 │       ├── api-utils.js         # API request wrapper helper class
 │       ├── common-utils.js      # Shared helper methods
 │       ├── mfa-utils.js         # TOTP passcode generator
-│       ├── jira-service.js      # JIRA Cloud API interactions
-│       ├── report-to-jira.js    # JSON result parser and dispatcher
 │       └── trigger-jenkins.js   # HTTP helper to invoke Jenkins builds
 ├── tests/                       # Test Suites
 │   ├── ui/                      # Browser UI Automation Tests
@@ -81,12 +79,15 @@ npx playwright install --with-deps
 ```
 
 ### 3. Environment Configuration
-Duplicate `.env.example` as `.env` and configure your target environments, credentials, and JIRA settings:
+Duplicate `.env.example` as `.env` and configure your target environments and credentials:
 ```ini
 ENV=qa # qa, preprod, prod, bu
 NORMAL_USERNAME=your_username
 NORMAL_PASSWORD=your_password
 NORMAL_TOTP_SECRET=your_totp_secret
+XERO_EMAIL=your_xero_email
+XERO_PASSWORD=your_xero_password
+XERO_TOTP_SECRET=your_xero_totp_secret
 ```
 
 ---
@@ -106,6 +107,10 @@ NORMAL_TOTP_SECRET=your_totp_secret
 * **Run UI Suite**:
   ```bash
   ENV=qa npm run test:ui
+  ```
+* **Run Import Clients Suite**:
+  ```bash
+  ENV=qa npm run test:import-clients
   ```
 * **Run API Suite**:
   ```bash
