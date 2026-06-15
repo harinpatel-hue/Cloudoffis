@@ -1,13 +1,16 @@
 const https = require('https');
+const path = require('path');
 require('dotenv').config();
 
 class GoogleChatReporter {
   constructor() {
+    this.config = null;
     this.suite = null;
     this.startTime = Date.now();
   }
 
   onBegin(config, suite) {
+    this.config = config;
     this.suite = suite;
     this.startTime = Date.now();
   }
@@ -52,14 +55,62 @@ class GoogleChatReporter {
       const statusEmoji = isSuccess ? '🟢' : '🔴';
       const statusText = isSuccess ? 'PASSED' : 'FAILED';
 
+      // Dynamically extract project names and executed files
+      const projectNames = this.suite.suites.map(s => s.title).filter(Boolean);
+      const projectStr = projectNames.join(', ') || 'N/A';
+
+      const files = new Set();
+      for (const test of allTests) {
+        if (test.location && test.location.file) {
+          const relativePath = path.relative(this.config?.rootDir || process.cwd(), test.location.file);
+          files.add(relativePath);
+        }
+      }
+      const filesStr = Array.from(files).map(f => path.basename(f)).join(', ') || 'N/A';
+
+      // Extract suite names (describe block titles or Spec file names)
+      const functionalityNames = new Set();
+      for (const projectSuite of this.suite.suites) {
+        for (const fileSuite of projectSuite.suites) {
+          if (fileSuite.suites && fileSuite.suites.length > 0) {
+            for (const describeSuite of fileSuite.suites) {
+              if (describeSuite.title) {
+                functionalityNames.add(describeSuite.title);
+              }
+            }
+          } else if (fileSuite.title) {
+            functionalityNames.add(path.basename(fileSuite.title));
+          }
+        }
+      }
+
+      // If we have actual test suites/describe blocks, filter out setup file names
+      // to keep the header clean and relevant.
+      let suiteNamesList = Array.from(functionalityNames);
+      const hasRealSuites = suiteNamesList.some(name => !name.endsWith('.setup.js') && !name.includes('setup'));
+      if (hasRealSuites) {
+        suiteNamesList = suiteNamesList.filter(name => !name.endsWith('.setup.js') && !name.includes('setup'));
+      }
+      
+      let suiteNames = suiteNamesList.join(', ');
+
+      if (!suiteNames && projectStr !== 'N/A') {
+        suiteNames = projectStr;
+      }
+
+      let titleText = suiteNames ? `${suiteNames} — ${statusText}` : `Playwright Test Run — ${statusText}`;
+      if (titleText.length > 80) {
+        titleText = titleText.substring(0, 77) + '...';
+      }
+
       const payload = {
         cardsV2: [
           {
             cardId: 'playwrightTestRun',
             card: {
               header: {
-                title: `Playwright Test Run — ${statusText}`,
-                subtitle: `Environment: ${env}`,
+                title: titleText,
+                subtitle: `Environment: ${env} | Project: ${projectStr}`,
                 imageUrl: isSuccess 
                   ? 'https://raw.githubusercontent.com/google/material-design-icons/master/png/action/check_circle/materialiconspng/48dp/2x/baseline_check_circle_green_48dp.png'
                   : 'https://raw.githubusercontent.com/google/material-design-icons/master/png/alert/error/materialiconspng/48dp/2x/baseline_error_red_48dp.png',
@@ -73,6 +124,18 @@ class GoogleChatReporter {
                       decoratedText: {
                         topLabel: 'Status',
                         text: `<b>${statusEmoji} ${statusText}</b>`
+                      }
+                    },
+                    {
+                      decoratedText: {
+                        topLabel: 'Project',
+                        text: `<b>${projectStr}</b>`
+                      }
+                    },
+                    {
+                      decoratedText: {
+                        topLabel: 'Test Files',
+                        text: `<b>${filesStr}</b>`
                       }
                     },
                     {
