@@ -1,19 +1,12 @@
-const { test, expect } = require('@playwright/test');
-const { LoginPage } = require('../../../src/page-objects/login-page');
-const { generateTotp } = require('../../../src/utils/mfa-utils');
+const { test, expect } = require('../../../utils/fixtures');
+const { generateTotp } = require('../../../utils/mfa-utils');
 
-test.describe('Xero 2FA Verification @ui', () => {
+test.describe('Xero 2FA Verification', () => {
   // Clear storageState so that login tests execute starting from a clean unauthenticated context
   test.use({ storageState: { cookies: [], origins: [] } });
 
-  let loginPage;
-
-  test.beforeEach(async ({ page }) => {
-    loginPage = new LoginPage(page);
+  test('Display 2FA Page on First-Time Login @TC014', async ({ page, loginPage }) => {
     await loginPage.navigate();
-  });
-
-  test('Display 2FA Page on First-Time Login @TC014 @regression', async ({ page }) => {
     await loginPage.clickXeroLogin();
     await page.waitForURL(/xero.com/, { timeout: 15000 });
     await loginPage.fillXeroCredentials(process.env.XERO_EMAIL, process.env.XERO_PASSWORD);
@@ -23,7 +16,8 @@ test.describe('Xero 2FA Verification @ui', () => {
     await expect(mfaInput.first()).toBeVisible().catch(() => { });
   });
 
-  test('Successful Login with Valid 2FA Code @TC015 @regression', async ({ page }) => {
+  test('Successful Login with Valid 2FA Code @TC015', async ({ page, loginPage }) => {
+    await loginPage.navigate();
     await loginPage.clickXeroLogin();
     await page.waitForURL(/xero.com/, { timeout: 15000 });
     await loginPage.fillXeroCredentials(process.env.XERO_EMAIL, process.env.XERO_PASSWORD);
@@ -37,7 +31,8 @@ test.describe('Xero 2FA Verification @ui', () => {
     await page.waitForURL(/authorize.xero.com/, { timeout: 30000 }).catch(() => { });
   });
 
-  test('Invalid 2FA Code on First Login @TC016 @regression', async ({ page }) => {
+  test('Invalid 2FA Code on First Login @TC016', async ({ page, loginPage }) => {
+    await loginPage.navigate();
     await loginPage.clickXeroLogin();
     await page.waitForURL(/xero.com/, { timeout: 15000 });
     await loginPage.fillXeroCredentials(process.env.XERO_EMAIL, process.env.XERO_PASSWORD);
@@ -51,7 +46,7 @@ test.describe('Xero 2FA Verification @ui', () => {
     }
   });
 
-  test('2FA Not Displayed During Active Session @TC017 @regression', async ({ browser, baseURL }) => {
+  test('2FA Not Displayed During Active Session @TC017', async ({ browser, baseURL }) => {
     const env = process.env.ENV || 'qa';
     const authFile = `playwright/.auth/workpapers-${env}.json`;
     const context = await browser.newContext({ storageState: authFile, baseURL });
@@ -61,13 +56,15 @@ test.describe('Xero 2FA Verification @ui', () => {
     await context.close();
   });
 
-  test('2FA Displayed After Session Expiry @TC018 @regression', async ({ page }) => {
+  test('2FA Displayed After Session Expiry @TC018', async ({ page, loginPage }) => {
+    await loginPage.navigate();
     await page.context().clearCookies();
     await page.reload();
     await expect(page).toHaveURL(/auth\/login/);
   });
 
-  test('Refresh 2FA Page During First Login @TC019 @regression', async ({ page }) => {
+  test('Refresh 2FA Page During First Login @TC019', async ({ page, loginPage }) => {
+    await loginPage.navigate();
     await loginPage.clickXeroLogin();
     await page.waitForURL(/xero.com/, { timeout: 15000 });
     await loginPage.fillXeroCredentials(process.env.XERO_EMAIL, process.env.XERO_PASSWORD);
@@ -81,7 +78,8 @@ test.describe('Xero 2FA Verification @ui', () => {
     }
   });
 
-  test('Browser Back Button on 2FA Page @TC020 @regression', async ({ page }) => {
+  test('Browser Back Button on 2FA Page @TC020', async ({ page, loginPage }) => {
+    await loginPage.navigate();
     await loginPage.clickXeroLogin();
     await page.waitForURL(/xero.com/, { timeout: 15000 });
     await loginPage.fillXeroCredentials(process.env.XERO_EMAIL, process.env.XERO_PASSWORD);
@@ -94,7 +92,8 @@ test.describe('Xero 2FA Verification @ui', () => {
     }
   });
 
-  test('Session Timeout on 2FA Page @TC021 @regression', async ({ page }) => {
+  test('Session Timeout on 2FA Page @TC021', async ({ page, loginPage }) => {
+    await loginPage.navigate();
     await loginPage.clickXeroLogin();
     await page.waitForURL(/xero.com/, { timeout: 15000 });
     await page.context().clearCookies();
@@ -102,7 +101,8 @@ test.describe('Xero 2FA Verification @ui', () => {
     await expect(page).toHaveURL(/auth\/login/);
   });
 
-  test('Multiple Invalid 2FA Attempts @TC022 @regression', async ({ page }) => {
+  test('Multiple Invalid 2FA Attempts @TC022', async ({ page, loginPage }) => {
+    await loginPage.navigate();
     await loginPage.clickXeroLogin();
     await page.waitForURL(/xero.com/, { timeout: 15000 });
     await loginPage.fillXeroCredentials(process.env.XERO_EMAIL, process.env.XERO_PASSWORD);
@@ -121,7 +121,8 @@ test.describe('Xero 2FA Verification @ui', () => {
     }
   });
 
-  test('Logout and Clear Cookies @TC023 @regression', async ({ page }) => {
+  test('Logout and Clear Cookies @TC023', async ({ page, loginPage }) => {
+    await loginPage.navigate();
     await page.context().clearCookies();
     await page.reload();
     await expect(page).toHaveURL(/auth\/login/);

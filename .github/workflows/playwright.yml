@@ -74,14 +74,7 @@ jobs:
         else
           ENV=$ENV npm run test:$TEST_TYPE
         fi
-    - name: Report failures to JIRA
-      if: always()
-      env:
-        JIRA_HOST: ${{ secrets.JIRA_HOST }}
-        JIRA_PROJECT_KEY: ${{ secrets.JIRA_PROJECT_KEY }}
-        JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
-        JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-      run: npm run jira:report
+
     - name: Upload Playwright Report
       uses: actions/upload-artifact@v4
       if: always()

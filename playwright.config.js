@@ -6,7 +6,7 @@ const packageJson = require('./package.json');
 
 // Read environment variables from .env file
 require('dotenv').config();
-const { getBaseUrl } = require('./src/config/env-config');
+const { getBaseUrl } = require('./config/env-config');
 const baseUrl = getBaseUrl();
 const env = process.env.ENV || 'qa';
 const authFile = `playwright/.auth/workpapers-${env}.json`;
@@ -68,7 +68,7 @@ const config = {
         ['html', { open: 'never' }],
         ['json', { outputFile: 'test-results/results.json' }],
         ['allure-playwright', { detail: true, outputFolder: 'allure-results' }],
-        ['./src/utils/notifier.js']
+        ['./utils/notifier.js']
     ],
     /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
     use: {
@@ -116,6 +116,8 @@ const config = {
         },
         {
             name: 'all-tests',
+            testDir: './tests',
+            testMatch: '**/*.spec.js',
             use: {
                 ...devices['Desktop Firefox'],
                 storageState: authFile,
@@ -124,48 +126,57 @@ const config = {
         },
         {
             name: 'smoke-suite',
+            testDir: './tests/smoke',
             use: {
                 ...devices['Desktop Firefox'],
                 storageState: authFile,
             },
             dependencies: ['setup'],
-            grep: /@smoke/,
         },
         {
             name: 'regression-suite',
+            testDir: './tests',
+            testMatch: [
+                'smoke/**/*.spec.js',
+                'regression/**/*.spec.js'
+            ],
             use: {
                 ...devices['Desktop Firefox'],
                 storageState: authFile,
             },
             dependencies: ['setup'],
-            grep: /@regression/,
         },
         {
             name: 'ui-suite',
+            testDir: './tests',
+            testMatch: [
+                'regression/clients/client-list.spec.js',
+                'smoke/auth/login-screen.spec.js',
+                'regression/xero/xero-*.spec.js'
+            ],
             use: {
                 ...devices['Desktop Firefox'],
                 storageState: authFile,
             },
             dependencies: ['setup'],
-            grep: /@ui/,
         },
         {
             name: 'api-suite',
+            testDir: './tests/api',
+            testMatch: '**/*.spec.js',
             use: {
-                ...devices['Desktop Firefox'],
                 storageState: authFile,
             },
             dependencies: ['setup'],
-            grep: /@api/,
         },
         {
             name: 'e2e-suite',
+            testDir: './tests/e2e',
             use: {
                 ...devices['Desktop Firefox'],
                 storageState: authFile,
             },
             dependencies: ['setup'],
-            grep: /@e2e/,
         },
     ],
 

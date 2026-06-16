@@ -1,19 +1,12 @@
-const { test, expect } = require('@playwright/test');
-const { LoginPage } = require('../../../src/page-objects/login-page');
-const { generateTotp } = require('../../../src/utils/mfa-utils');
+const { test, expect } = require('../../../utils/fixtures');
+const { generateTotp } = require('../../../utils/mfa-utils');
 
-test.describe('Xero Data Consent Verification @ui', () => {
+test.describe('Xero Data Consent Verification', () => {
   // Clear storageState so that login tests execute starting from a clean unauthenticated context
   test.use({ storageState: { cookies: [], origins: [] } });
 
-  let loginPage;
-
-  test.beforeEach(async ({ page }) => {
-    loginPage = new LoginPage(page);
+  test('Check successful authorization request @TC029', async ({ page, loginPage }) => {
     await loginPage.navigate();
-  });
-
-  test('Check successful authorization request @TC029 @regression', async ({ page }) => {
     await loginPage.clickXeroLogin();
     await page.waitForURL(/xero.com/, { timeout: 15000 });
     await loginPage.fillXeroCredentials(process.env.XERO_EMAIL, process.env.XERO_PASSWORD);
@@ -30,7 +23,8 @@ test.describe('Xero Data Consent Verification @ui', () => {
     await expect(allowBtn.first()).toBeVisible().catch(() => { });
   });
 
-  test('Test "Allow Access" button @TC030 @regression', async ({ page }) => {
+  test('Test "Allow Access" button @TC030', async ({ page, loginPage }) => {
+    await loginPage.navigate();
     await loginPage.clickXeroLogin();
     await page.waitForURL(/xero.com/, { timeout: 15000 });
     await loginPage.fillXeroCredentials(process.env.XERO_EMAIL, process.env.XERO_PASSWORD);
@@ -46,7 +40,8 @@ test.describe('Xero Data Consent Verification @ui', () => {
     await loginPage.allowAccess().catch(() => { });
   });
 
-  test('Test "Cancel" button @TC031 @regression', async ({ page }) => {
+  test('Test "Cancel" button @TC031', async ({ page, loginPage }) => {
+    await loginPage.navigate();
     await loginPage.clickXeroLogin();
     await page.waitForURL(/xero.com/, { timeout: 15000 });
     await loginPage.fillXeroCredentials(process.env.XERO_EMAIL, process.env.XERO_PASSWORD);
@@ -63,7 +58,8 @@ test.describe('Xero Data Consent Verification @ui', () => {
     await cancelBtn.first().click().catch(() => { });
   });
 
-  test('Verify terms and privacy policy link @TC032 @regression', async ({ page }) => {
+  test('Verify terms and privacy policy link @TC032', async ({ page, loginPage }) => {
+    await loginPage.navigate();
     await loginPage.clickXeroLogin();
     await page.waitForURL(/xero.com/, { timeout: 15000 });
     await loginPage.fillXeroCredentials(process.env.XERO_EMAIL, process.env.XERO_PASSWORD);

@@ -18,18 +18,15 @@
     "test:api": "playwright test --project=api-suite",
     "test:e2e": "playwright test --project=e2e-suite",
     "test:e2e:headed": "playwright test --project=e2e-suite --headed",
-    "allure:generate": "node src/utils/generate-allure.js",
-    "notify:chat": "node src/utils/notifier.js",
+    "allure:generate": "node utils/generate-allure.js",
+    "notify:chat": "node utils/notifier.js",
     "allure:serve": "allure serve allure-results",
     "allure:open": "allure open allure-report",
     "show-report": "playwright show-report",
-    "jenkins:trigger": "node src/utils/trigger-jenkins.js",
+    "jenkins:trigger": "node utils/trigger-jenkins.js",
     "clean": "node -e \"['test-results', 'playwright-report', 'allure-results', 'allure-report'].forEach(dir => require('fs').rmSync(dir, { recursive: true, force: true }))\"",
-    "clear": "npm run clean",
-    "clean:allure": "node -e \"['allure-results', 'allure-report'].forEach(dir => require('fs').rmSync(dir, { recursive: true, force: true }))\""
+    "clear": "npm run clean"
   },
-  "author": "Cloudoffis QA Team",
-  "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.60.0",
     "allure-commandline": "^2.42.0",

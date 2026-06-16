@@ -2,8 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const resultsDir = path.join(__dirname, '../../allure-results');
-const reportDir = path.join(__dirname, '../../allure-report');
+const resultsDir = path.join(__dirname, '../allure-results');
+const reportDir = path.join(__dirname, '../allure-report');
 
 function copyFolderSync(from, to) {
   if (!fs.existsSync(from)) return;

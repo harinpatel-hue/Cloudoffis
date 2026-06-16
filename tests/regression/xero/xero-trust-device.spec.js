@@ -1,19 +1,13 @@
-const { test, expect } = require('@playwright/test');
-const { LoginPage } = require('../../../src/page-objects/login-page');
-const { generateTotp } = require('../../../src/utils/mfa-utils');
+const { test, expect } = require('../../../utils/fixtures');
+const { generateTotp } = require('../../../utils/mfa-utils');
+const { LoginPage } = require('../../../pages/LoginPage');
 
-test.describe('Xero Trust This Device @ui', () => {
+test.describe('Xero Trust This Device', () => {
   // Clear storageState so that login tests execute starting from a clean unauthenticated context
   test.use({ storageState: { cookies: [], origins: [] } });
 
-  let loginPage;
-
-  test.beforeEach(async ({ page }) => {
-    loginPage = new LoginPage(page);
+  test('Display Trust This Device Tooltip @TC024', async ({ page, loginPage }) => {
     await loginPage.navigate();
-  });
-
-  test('Display Trust This Device Tooltip @TC024 @regression', async ({ page }) => {
     await loginPage.clickXeroLogin();
     await page.waitForURL(/xero.com/, { timeout: 15000 });
     await loginPage.fillXeroCredentials(process.env.XERO_EMAIL, process.env.XERO_PASSWORD);
@@ -23,7 +17,8 @@ test.describe('Xero Trust This Device @ui', () => {
     await expect(infoIcon).toBeVisible().catch(() => { });
   });
 
-  test('Close Trust This Device Tooltip @TC025 @regression', async ({ page }) => {
+  test('Close Trust This Device Tooltip @TC025', async ({ page, loginPage }) => {
+    await loginPage.navigate();
     await loginPage.clickXeroLogin();
     await page.waitForURL(/xero.com/, { timeout: 15000 });
     await loginPage.fillXeroCredentials(process.env.XERO_EMAIL, process.env.XERO_PASSWORD);
@@ -41,7 +36,8 @@ test.describe('Xero Trust This Device @ui', () => {
     }
   });
 
-  test('Trust Device and Login Successfully @TC026 @regression', async ({ page }) => {
+  test('Trust Device and Login Successfully @TC026', async ({ page, loginPage }) => {
+    await loginPage.navigate();
     await loginPage.clickXeroLogin();
     await page.waitForURL(/xero.com/, { timeout: 15000 });
     await loginPage.fillXeroCredentials(process.env.XERO_EMAIL, process.env.XERO_PASSWORD);
@@ -61,7 +57,8 @@ test.describe('Xero Trust This Device @ui', () => {
     await page.waitForURL(/authorize.xero.com/, { timeout: 30000 }).catch(() => {});
   });
 
-  test('Login Again from Trusted Device @TC027 @regression', async ({ page }) => {
+  test('Login Again from Trusted Device @TC027', async ({ page, loginPage }) => {
+    await loginPage.navigate();
     const env = process.env.ENV || 'qa';
     const authFile = `playwright/.auth/workpapers-${env}.json`;
     await page.context().storageState({ path: authFile }).catch(() => {});
@@ -76,7 +73,7 @@ test.describe('Xero Trust This Device @ui', () => {
     await expect(page).toHaveURL(/client-list/);
   });
 
-  test('Login from New Browser on Same Device @TC028 @regression', async ({ browser, baseURL }) => {
+  test('Login from New Browser on Same Device @TC028', async ({ browser, baseURL }) => {
     const context = await browser.newContext({ storageState: { cookies: [], origins: [] }, baseURL });
     const newPage = await context.newPage();
     const newLoginPage = new LoginPage(newPage);

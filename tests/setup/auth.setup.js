@@ -1,7 +1,7 @@
 const { test: setup, expect } = require('@playwright/test');
-const { LoginPage } = require('../../src/page-objects/login-page');
-const { generateTotp } = require('../../src/utils/mfa-utils');
-const { getBaseUrl } = require('../../src/config/env-config');
+const { LoginPage } = require('../../pages/LoginPage');
+const { generateTotp } = require('../../utils/mfa-utils');
+const { getBaseUrl } = require('../../config/env-config');
 
 const env = process.env.ENV || 'qa';
 const authFile = `playwright/.auth/workpapers-${env}.json`;

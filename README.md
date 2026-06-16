@@ -6,8 +6,10 @@ A modern, robust, and clean boilerplate for Web and API automation testing using
 
 ## 🚀 Features
 
+* **Dependency-Injected Fixtures**: Native Playwright custom fixtures (`loginPage`, `clientsPage`, `apiUtils`) eliminating manual instantiation boilerplates.
+* **Semantic User-Facing Locators**: Selectors written from the user's perspective (`getByRole()`, `getByLabel()`, `getByPlaceholder()`) with stable fallbacks.
+* **Dynamic Wait Execution**: Brittle sleep timers (`waitForTimeout`) replaced with dynamic API response triggers (`waitForResponse`) and auto-waiting assertions.
 * **Multi-Environment Support**: Seamlessly run tests against **QA**, **Preprod**, **Prod**, or **BU** (Business Unit) environments using env variables.
-* **Modular Page Object Model (POM)**: Separates functional page actions and selectors from executable test assertions.
 * **Automated MFA (TOTP)**: Real-time calculation of 6-digit Multi-Factor Authentication codes via the `otplib` algorithm for fully unattended login automation.
 * **Project-Based Test Suites**: Structured execution scopes (`all-tests`, `smoke-suite`, `regression-suite`, `ui-suite`, `api-suite`) configured inside `playwright.config.js`.
 * **CI/CD Integration**: Out-of-the-box support with pre-configured GitHub Actions (`.github/workflows/playwright.yml`) and local Jenkins (`Jenkinsfile`).
@@ -18,50 +20,46 @@ A modern, robust, and clean boilerplate for Web and API automation testing using
 ## 📂 Project Structure
 
 ```text
-├── .github/
-│   └── workflows/
-│       └── playwright.yml       # GitHub Actions workflow (dispatch-ready)
-├── .vscode/
-│   ├── settings.json            # VS Code sidebar filters to hide build noise
-│   └── tasks.json               # IDE custom tasks to trigger Jenkins builds
-├── src/                         # Framework Core Source
-│   ├── config/
-│   │   ├── env-config.js        # Environment URLs and dynamic credentials
-│   │   └── api-routes.js        # Centralized API endpoints routes
-│   ├── page-objects/
-│   │   ├── import-clients-page.js # Import Clients screen actions and assertions
-│   │   └── login-page.js        # POM page for credentials & MFA handling
-│   ├── test-data/
-│   │   └── api-payloads/        # Mock payloads for API requests
-│   │       └── user-payload.json
-│   └── utils/
-│       ├── api-utils.js         # API request wrapper helper class
-│       ├── common-utils.js      # Shared helper methods
-│       ├── mfa-utils.js         # TOTP passcode generator
-│       └── trigger-jenkins.js   # HTTP helper to invoke Jenkins builds
-├── tests/                       # Test Suites
-│   ├── ui/                      # Browser UI Automation Tests
-│   │   ├── auth/                # MFA login and authentication tests
-│   │   │   └── login.spec.js
-│   │   ├── client-list/         # Client table search & filter tests
-│   │   │   └── client-list.spec.js
-│   │   ├── create-job/          # Client audit job creation tests
-│   │   │   └── create-job.spec.js
-│   │   ├── import-clients/      # Client CSV import validations
-│   │   │   └── import-clients.spec.js
-│   │   ├── ledger-connection/   # Xero ledger connections & sync tests
-│   │   │   └── ledger-connection.spec.js
-│   │   └── workpapers/          # Audit workpapers CRUD tests
-│   │       └── workpapers.spec.js
-│   └── api/                     # Backend Integration API Tests
-│       ├── auth/                # JWT Token API validation
-│       │   └── token.spec.js
-│       └── users/               # Profile and listing endpoints tests
-│           └── users.spec.js
-├── Jenkinsfile                  # Jenkins build pipeline script
-├── package.json                 # Project dependencies, scripts, and metadata
-├── playwright.config.js         # Main test runner config (with versioning metadata)
-└── .env.example                 # Environment variables credential template
+├── config/                             # Environment and endpoint configurations
+│   ├── qa.env.js
+│   ├── dev.env.js
+│   ├── staging.env.js
+│   ├── prod.env.js
+│   ├── bu.env.js
+│   ├── env-config.js                  # Dynamic config/base URL loader
+│   └── api-routes.js                  # Centralized API endpoints routes
+├── pages/                              # Page Object Models (POM)
+│   ├── LoginPage.js
+│   └── ClientsPage.js
+├── tests/                              # Structured test suites
+│   ├── setup/
+│   │   └─ auth.setup.js               # Global authenticated session setup
+│   ├── api/
+│   │   └─ users.spec.js               # Consolidated User API tests (GET & POST)
+│   ├── smoke/
+│   │   └── auth/
+│   │       └─ login-screen.spec.js    # UI Smoke tests
+│   ├── regression/                    # UI Regression tests (grouped by module)
+│   │   ├── clients/
+│   │   │   └─ client-list.spec.js
+│   │   └── xero/
+│   │       ├─ xero-consent.spec.js
+│   │       ├─ xero-mfa.spec.js
+│   │       ├─ xero-portal.spec.js
+│   │       └─ xero-trust-device.spec.js
+│   └── e2e/
+│       └─ placeholder.spec.js         # End-to-End integration scenarios
+├── utils/                              # Utilities and custom reporters
+│   ├── api-utils.js                   # API request wrapper helper class
+│   ├── fixtures.js                    # Custom Playwright fixtures (POM & API injection)
+│   ├── mfa-utils.js                   # TOTP passcode generator
+│   ├── notifier.js                    # Google Chat custom reporter notifications
+│   ├── trigger-jenkins.js             # HTTP helper to invoke Jenkins builds
+│   └── generate-allure.js             # Metadata injector for Allure report
+├── Jenkinsfile                         # Jenkins build pipeline script
+├── package.json                        # Project dependencies, scripts, and metadata
+├── playwright.config.js                # Main test runner config (with versioning metadata)
+└── .env.example                        # Environment variables credential template
 ```
 
 ---
@@ -108,10 +106,6 @@ XERO_TOTP_SECRET=your_xero_totp_secret
   ```bash
   ENV=qa npm run test:ui
   ```
-* **Run Import Clients Suite**:
-  ```bash
-  ENV=qa npm run test:import-clients
-  ```
 * **Run API Suite**:
   ```bash
   ENV=qa npm run test:api
@@ -122,9 +116,9 @@ XERO_TOTP_SECRET=your_xero_totp_secret
   ```
 
 ### 2. Targeting Specific Environments
-Pass the `ENV` variable (`qa`, `preprod`, `prod`, `bu`) at execution time:
+Pass the `ENV` variable (`qa`, `dev`, `staging`, `prod`, `bu`) at execution time:
 ```bash
-ENV=preprod npm run test:smoke
+ENV=staging npm run test:smoke
 ENV=prod npm run test:regression
 ```
 

@@ -2,18 +2,18 @@ class LoginPage {
   constructor(page) {
     this.page = page;
 
-    // Simple Selectors
-    this.usernameInput = page.locator('input#email');
-    this.passwordInput = page.locator('input#password');
-    this.loginButton = page.locator('#sign-in-btn');
+    // Modern User-Facing Locators with stable fallbacks
+    this.usernameInput = page.getByLabel(/email/i).or(page.locator('input#email'));
+    this.passwordInput = page.getByLabel(/password/i).or(page.locator('input#password'));
+    this.loginButton = page.getByRole('button', { name: /sign in/i }).or(page.locator('#sign-in-btn'));
 
     this.mfaCodeInput = page.getByLabel('Enter Code', { exact: true });
     this.mfaVerifyButton = page.getByRole('button', { name: 'Verify Code' });
 
-    this.xeroLoginButton = page.locator('button:has-text("Xero"), a:has-text("Xero")');
+    this.xeroLoginButton = page.getByRole('button', { name: /xero/i }).or(page.getByRole('link', { name: /xero/i })).or(page.locator('button:has-text("Xero"), a:has-text("Xero")'));
 
-    this.emailError = page.locator('text=Email Address is required.');
-    this.passwordError = page.locator('text=Password field is required.');
+    this.emailError = page.getByText('Email Address is required.');
+    this.passwordError = page.getByText('Password field is required.');
     this.generalErrorMessage = page.locator('.toast, [role="alert"]');
   }
 
